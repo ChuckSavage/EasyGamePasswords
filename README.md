@@ -10,3 +10,5 @@ Jump lists are the right click information that shows up when you right click an
 An editor is provided to adjust the settings.
 
 ![To Clipboard Editor](/resources/Editor.png?raw=true "To Clipboard Editor")
+
+Closing the editor, sets the jump list items to whichever Jump List was selected in the editor on close.
