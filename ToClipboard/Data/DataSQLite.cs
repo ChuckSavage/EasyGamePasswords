@@ -88,7 +88,7 @@ namespace ToClipboard.Data
         #region Methods
         public IItem AddNew_Item(ItemsControl control, long? jumpListId = null, long? categoryId = null)
         {
-            int count = db.Items.Local.Count + 1;
+            int count = GetLocalItems(jumpListId, categoryId).Length + 1;
             var item = new Item { Title = "{0} title".F(count), Text = "{0} text".F(count), CategoryId = categoryId, JumpListId = jumpListId };
             if (null != jumpListId || null != categoryId)
             {
@@ -168,6 +168,13 @@ namespace ToClipboard.Data
             if (null != jumpListId || null != categoryId)
                 return db.Items.Where(i => i.JumpListId == jumpListId && i.CategoryId == categoryId).ToArray();
             return db.Items.ToArray();
+        }
+
+        public IItem[] GetLocalItems(long? jumpListId = null, long? categoryId = null)
+        {
+            if (null != jumpListId || null != categoryId)
+                return db.Items.Local.Where(i => i.JumpListId == jumpListId && i.CategoryId == categoryId).ToArray();
+            return db.Items.Local.ToArray();
         }
 
         public void Item_Clicked(IItem item)
