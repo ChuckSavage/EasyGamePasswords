@@ -244,6 +244,10 @@
   <ItemGroup>
     <Resource Include="TC logo.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Delete Icon Faded.png" />
+    <Resource Include="Resources\Delete Icon Highlite.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
