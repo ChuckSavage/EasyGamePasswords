@@ -6,3 +6,7 @@ Enter JumpLists to Clipboard (ToClipboard)
 ![To Clipboard](/resources/ToClipboard.png?raw=true "To Clipboard")
 
 Jump lists are the right click information that shows up when you right click an icon on your taskbar or start menu. In the image above, it shows a couple items of importance. The FFXIV titled items. Clicking the password version, copies the password I've set on my database via the application, to the clipboard, then launches the application. The other, I've configured only to copy the user name to the clipboard. Since FFXIV stores the user name in its launcher, I don't need it as often.
+
+An editor is provided to adjust the settings.
+
+![To Clipboard Editor](/resources/Editor.png?raw=true "To Clipboard Editor")

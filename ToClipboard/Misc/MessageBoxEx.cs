@@ -1,4 +1,10 @@
-﻿// Modified from: http://stackoverflow.com/a/3498791/353147
+﻿/*
+ * Modified from: http://stackoverflow.com/a/3498791/353147
+ * 
+ * Note: I don't know if this file is in the public domain. It is modified from a 
+ * StackOverflow post, and that was taken from somewhere else, which doesn't show
+ * the file.
+ */
 
 using System;
 using System.Drawing;

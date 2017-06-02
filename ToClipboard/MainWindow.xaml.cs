@@ -112,6 +112,7 @@ namespace ToClipboard
                 // DB.SaveChanges() won't catch it, until the app is closed. Not sure if its me clicking
                 // close X in window corner, or what.
 
+                // This popup shows in middle of application, but not necessarily on muli-monitor setups
                 if (System.Windows.Forms.DialogResult.Yes == MessageBoxEx.Show(this,
                     "There are unsaved changes. Save?", "To Clipboard", System.Windows.Forms.MessageBoxButtons.YesNo))
                 {
