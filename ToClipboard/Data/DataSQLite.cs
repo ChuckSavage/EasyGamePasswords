@@ -152,7 +152,7 @@ namespace ToClipboard.Data
         }
 
         /// <summary>
-        /// Returns saved items
+        /// Returns saved and unsaved items
         /// </summary>
         /// <param name="jumpListId"></param>
         /// <param name="categoryId"></param>
