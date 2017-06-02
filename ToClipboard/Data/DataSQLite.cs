@@ -141,6 +141,12 @@ namespace ToClipboard.Data
             SelectedJumpList = db.JumpLists.FirstOrDefault();
         }
 
+        public void Delete_Item(IItem IN)
+        {
+            Item item = (Item)IN;
+            db.Items.Local.Remove(item);
+        }
+
         public void Dispose()
         {
             db.Dispose();

@@ -12,6 +12,7 @@ namespace ToClipboard.Model
 
         void Bind_Items_ItemsSource(ItemsControl control, long? jumpListId = null, long? categoryId = null);
         IItem AddNew_Item(ItemsControl control, long? jumpListId = null, long? categoryId = null);
+        void Delete_Item(IItem item);
         void Item_Clicked(IItem item);
         IItem Item_Clicked(long itemId);
 

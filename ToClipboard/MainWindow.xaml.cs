@@ -29,10 +29,10 @@ namespace ToClipboard
             //    changed = true;
             //};
             DB.Bind_JumpLists_ItemsSource(cbJumpList);
-            IJumpList jumpList = DB.SelectedJumpList;//.First_JumpList();
+            //IJumpList jumpList = DB.SelectedJumpList;//.First_JumpList();
             //cbJumpList.SelectedItem = jumpList = db.First_JumpList();
             //cbJumpList.Text = jumpList.Name;
-            Bind_ListView_Items(jumpList.JumpListId);
+            RefreshItems();
 
             //this.DataContext = this;
         }
@@ -48,10 +48,9 @@ namespace ToClipboard
             DB.AddNew_Item(listView, DB.SelectedJumpList.JumpListId);
         }
 
-        void Bind_ListView_Items(long jumpListId)
+        void RefreshItems()
         {
-            DB.Bind_Items_ItemsSource(listView, jumpListId: jumpListId);
-
+            DB.Bind_Items_ItemsSource(listView, jumpListId: DB.SelectedJumpList.JumpListId);
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
@@ -139,6 +138,15 @@ namespace ToClipboard
 
         private void Text_Changed(object sender, TextChangedEventArgs e)
         {
+            changed = true;
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            IItem item = (IItem)button.DataContext;
+            DB.Delete_Item(item);
+            RefreshItems();
             changed = true;
         }
     }

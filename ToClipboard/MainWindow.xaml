@@ -96,10 +96,11 @@
                         <GridViewColumn Header="Delete">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button 
+                                    <Button Click="DeleteButton_Click"
                                         Background="{x:Null}"
                                         BorderThickness="0"
-                                        Height="20" Width="20">
+                                        Height="20" Width="20"
+                                        >
                                         <Button.Style>
                                             <Style TargetType="{x:Type Button}">
                                                 <Setter Property="Template">
