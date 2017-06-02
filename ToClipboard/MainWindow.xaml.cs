@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shell;
+using ToClipboard.Misc;
 using ToClipboard.Model;
 
 namespace ToClipboard
@@ -111,7 +112,11 @@ namespace ToClipboard
                 // DB.SaveChanges() won't catch it, until the app is closed. Not sure if its me clicking
                 // close X in window corner, or what.
 
-                // TODO: display to user unsaved changes need saving
+                if (System.Windows.Forms.DialogResult.Yes == MessageBoxEx.Show(this,
+                    "There are unsaved changes. Save?", "To Clipboard", System.Windows.Forms.MessageBoxButtons.YesNo))
+                {
+                    DB.SaveChanges();
+                }
             }
             base.OnClosing(e);
         }
