@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="ToClipboard" Language="1033" Version="1.0.0.0" Manufacturer="Other" UpgradeCode="71b53809-790d-483b-8ce8-d8f52c746b22">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate />
+
+    <Feature Id="ProductFeature" Title="ToClipboard" Level="1">
+      <ComponentRef Id="ToClipboard.exe" />
+      <ComponentRef Id="x64sqlite3.dll"/>
+      <ComponentRef Id="x86sqlite3.dll"/>
+      <ComponentRef Id ="appShortcutDesktop"/>
+    </Feature>
+
+    <InstallExecuteSequence>
+      <Custom Action='LaunchInstalledExe' After='InstallFinalize'/>
+    </InstallExecuteSequence>
+
+    <CustomAction Id="LaunchInstalledExe"
+        FileKey="ExeFile"
+        ExeCommand=""
+        Execute="immediate"
+        Impersonate="yes"
+        Return="asyncNoWait" />
+
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="To Clipboard">
+          <Directory Id="DIRx64" Name="x64" />
+          <Directory Id="DIRx86" Name="x86" />
+        </Directory>
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <DirectoryRef Id="INSTALLFOLDER">
+      <Component Id="ToClipboard.exe" Guid="80087425-A704-414E-BD26-0863EE079CB4">
+        <File Id="ExeFile" Source="$(var.ToClipboard.TargetPath)" KeyPath="yes" Checksum="yes" />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="DIRx64">
+      <Component Id="x64sqlite3.dll" Guid="3122D772-D298-47C5-90EE-3A6953440416">
+        <File Id="x64sqlite3.dll" Source="$(var.ToClipboard.TargetDir)\x64\sqlite3.dll" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="DIRx86">
+      <Component Id="x86sqlite3.dll" Guid="21DF1E5C-4E63-4B3C-ABB2-9E4FB9CD4568">
+        <File Id="x86sqlite3.dll" Source="$(var.ToClipboard.TargetDir)\x86\sqlite3.dll" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="appShortcutDesktop" Guid="720DAF21-60EF-4458-937B-B9BE18DCD1D6">
+        <Shortcut Id="ApplicationDesktopShortcut"
+            Name="To Clipboard"
+            Description="Right click running app icon on taskbar to pin to taskbar for easy access to your clipboard items."
+            Target="[INSTALLFOLDER]ToClipboard.exe"
+            WorkingDirectory="INSTALLFOLDER"/>
+        <RemoveFolder Id="DesktopFolder" On="uninstall"/>
+        <RegistryValue
+            Root="HKCU"
+            Key="Software/Other/ToClipboard"
+            Name="installed"
+            Type="integer"
+            Value="1"
+            KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+</Wix>
