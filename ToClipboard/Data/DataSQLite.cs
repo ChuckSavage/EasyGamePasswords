@@ -23,10 +23,14 @@ namespace ToClipboard.Data
 
         public DataSQLite(bool seedData = false)
         {
-            //if (File.Exists(DATABASE))
-            //    File.Delete(DATABASE);
+            FileInfo database = new FileInfo(Path.Combine(App.UserDataDirectory.FullName, DATABASE));
+            if (!database.Directory.Exists)
+                Directory.CreateDirectory(database.DirectoryName);
 
-            db = new SQLiteDbContext(DATABASE);
+            //if (database.Exists)
+            //    database.Delete();
+
+            db = new SQLiteDbContext(database.FullName);
             //SQLiteDbContext._stateListener.Changing += _stateListener_Changing;
             //SQLiteDbContext._stateListener.Changed += _stateListener_Changed;
 
