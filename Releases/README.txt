@@ -1,3 +1,5 @@
+Note: For updated installation instructions, see the wiki.
+
 1 - Execute the ToClipboard installer. 
     It'll install to C:\ProgramFiles (x86)\ToClipboard. 
     There should be a shortcut put on the desktop as well.
