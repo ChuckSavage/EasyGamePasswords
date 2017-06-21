@@ -12,3 +12,9 @@ To adjust the settings, run the program. (If you haven't already, right click th
 ![To Clipboard Editor](/resources/Editor.png?raw=true "To Clipboard Editor")
 
 Closing the editor, sets the jump list items to whichever Jump List was selected in the editor on close.
+
+# Compatibility
+
+Tested only my Windows 10 Pro rig.
+
+Jump lists were introduced with Windows 7, (and may have been removed in Windows 8, I've read about people requesting them back and is back for Windows 10)
