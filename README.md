@@ -15,6 +15,6 @@ Closing the editor, sets the jump list items to whichever Jump List was selected
 
 # Compatibility
 
-Tested only my Windows 10 Pro rig.
+Tested only on my Windows 10 Pro rig.
 
 Jump lists were introduced with Windows 7, (and may have been removed in Windows 8, I've read about people requesting them back and is back for Windows 10)
