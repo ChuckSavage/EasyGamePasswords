@@ -24,7 +24,7 @@ namespace ToClipboard
         {
             InitializeComponent();
 
-            Title = App.TITLE + " v1.0.2";
+            Title = App.TITLE + " v1.0.3";
 
             DB = new Data.DataSQLite(true);
             //DB.EntityChanged += (e, a, b) => //changed = true;
@@ -97,22 +97,16 @@ namespace ToClipboard
                 //
                 // If the LaunchApp is an image file, use it for the Jump List Item Icon
                 //
-                if (!string.IsNullOrWhiteSpace(iconfile) && System.IO.File.Exists(iconfile) && iconfile.IsImage())
+                App.AppAndIcon_IsImage(iconfile, tempIconLocation =>
                 {
-                    // Get the temporary file location for the icon
-                    string temp = System.IO.Path.Combine(
-                        App.TempDirectory.FullName,
-                        System.IO.Path.GetFileNameWithoutExtension(iconfile)
-                        ) + ".ico";
-
-                    //if (System.IO.File.Exists(temp))
-                    //    System.IO.File.Delete(temp);
+                    //if (tempIconLocation.Exists)
+                    //    tempIconLocation.Delete();
 
                     // If icon doesn't exist, create it
-                    if (!System.IO.File.Exists(temp))
-                        IconHelper.ConvertToIcon(iconfile, temp, 64);
-                    iconfile = temp;
-                }
+                    if (!tempIconLocation.Exists)
+                        IconHelper.ConvertToIcon(iconfile, tempIconLocation.FullName, 64);
+                    iconfile = tempIconLocation.FullName;
+                });
 
                 var task = new JumpTask
                 {
@@ -170,6 +164,21 @@ namespace ToClipboard
         private void Text_Changed(object sender, TextChangedEventArgs e)
         {
             changed = true;
+        }
+
+        private void LaunchApp_Changed(object sender, TextChangedEventArgs e)
+        {
+            changed = true;
+
+            TextBox textBox = (TextBox)sender;
+            IItem item = (IItem)textBox.DataContext;
+
+            // If (old) item.LaunchApp is an image, delete its Icon if it exists
+            App.AppAndIcon_IsImage(item.LaunchApp, tempIconLocation =>
+            {
+                if (tempIconLocation.Exists)
+                    tempIconLocation.Delete();
+            });
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)

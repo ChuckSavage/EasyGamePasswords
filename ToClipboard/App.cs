@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using System.Xml.Linq;
-using System.Linq;
 
 namespace ToClipboard
 {
@@ -10,6 +8,23 @@ namespace ToClipboard
     {
         public const string TITLE = "JumpList to Clipboard";
         public const string COMPANY = "Other";
+
+        /// <summary>
+        /// If icon is an image, run an action with the icon location.
+        /// </summary>
+        /// <param name="iconfile"></param>
+        /// <param name="action"></param>
+        public static void AppAndIcon_IsImage(string iconfile, Action<FileInfo> action)
+        {
+            if (!string.IsNullOrWhiteSpace(iconfile)
+                && File.Exists(iconfile)
+                && iconfile.IsImage())
+            {
+                // Get the temporary file location for the icon
+                var temp = IconLocation(iconfile);
+                action(temp);
+            }
+        }
 
         static string AppName
         {
@@ -43,6 +58,20 @@ namespace ToClipboard
         }
         static DirectoryInfo _DataDirectory;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fromFile"></param>
+        /// <returns></returns>
+        public static FileInfo IconLocation(string fromFile)
+        {
+            string temp = Path.Combine(
+                        TempDirectory.FullName,
+                        Path.GetFileNameWithoutExtension(fromFile)
+                        ) + ".ico";
+            return new FileInfo(temp);
+        }
+
         public static string PathAdd_Company_and_AppName(string path)
         {
             if (!string.IsNullOrWhiteSpace(COMPANY))
@@ -51,6 +80,23 @@ namespace ToClipboard
                 path = Path.Combine(path, AppName);
             return path;
         }
+
+        public static DirectoryInfo TempDirectory
+        {
+            get
+            {
+                if (null == _TempDirectory)
+                {
+                    string path = Path.GetTempPath();
+                    path = PathAdd_Company_and_AppName(path);
+                    _TempDirectory = new DirectoryInfo(path);
+                    if (!_TempDirectory.Exists)
+                        Directory.CreateDirectory(_TempDirectory.FullName);
+                }
+                return _TempDirectory;
+            }
+        }
+        static DirectoryInfo _TempDirectory;
 
         /// <summary>
         /// Usually located at C:\Users\[user]\AppData\Roaming\[company]\[AppName]
@@ -69,22 +115,5 @@ namespace ToClipboard
             }
         }
         static DirectoryInfo _UserData;
-
-        public static DirectoryInfo TempDirectory
-        {
-            get
-            {
-                if (null == _TempDirectory)
-                {
-                    string path = Path.GetTempPath();
-                    path = PathAdd_Company_and_AppName(path);
-                    _TempDirectory = new DirectoryInfo(path);
-                    if (!_TempDirectory.Exists)
-                        Directory.CreateDirectory(_TempDirectory.FullName);
-                }
-                return _TempDirectory;
-            }
-        }
-        static DirectoryInfo _TempDirectory;
     }
 }

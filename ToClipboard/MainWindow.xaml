@@ -80,7 +80,7 @@
                         <GridViewColumn Header="App and Icon" Width="Auto">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBox Text="{Binding LaunchApp}" TextChanged="Text_Changed" />
+                                    <TextBox Text="{Binding LaunchApp}" TextChanged="LaunchApp_Changed" />
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
