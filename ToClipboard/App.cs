@@ -1,11 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Xml.Linq;
+using System.Linq;
 
 namespace ToClipboard
 {
     public partial class App
     {
+        public const string TITLE = "JumpList to Clipboard";
         public const string COMPANY = "Other";
 
         static string AppName
@@ -66,5 +69,22 @@ namespace ToClipboard
             }
         }
         static DirectoryInfo _UserData;
+
+        public static DirectoryInfo TempDirectory
+        {
+            get
+            {
+                if (null == _TempDirectory)
+                {
+                    string path = Path.GetTempPath();
+                    path = PathAdd_Company_and_AppName(path);
+                    _TempDirectory = new DirectoryInfo(path);
+                    if (!_TempDirectory.Exists)
+                        Directory.CreateDirectory(_TempDirectory.FullName);
+                }
+                return _TempDirectory;
+            }
+        }
+        static DirectoryInfo _TempDirectory;
     }
 }

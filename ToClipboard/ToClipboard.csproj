@@ -195,6 +195,7 @@
     </Compile>
     <Compile Include="Migrations\SQLiteDbContextModelSnapshot.cs" />
     <Compile Include="Misc\Extensions.cs" />
+    <Compile Include="Misc\IconHelper.cs" />
     <Compile Include="Misc\MessageBoxEx.cs" />
     <Compile Include="Model\Events.cs" />
     <Compile Include="Model\IData.cs" />

@@ -24,6 +24,8 @@ namespace ToClipboard
         {
             InitializeComponent();
 
+            Title = App.TITLE + " v1.0.2";
+
             DB = new Data.DataSQLite(true);
             //DB.EntityChanged += (e, a, b) => //changed = true;
             //{
@@ -87,15 +89,38 @@ namespace ToClipboard
 
             string category = DB.SelectedJumpList.Name + " Jump List";
 
+            //App.TempDirectory.Open();
+
             foreach (IItem item in DB.GetItems(DB.SelectedJumpList.JumpListId))
             {
+                string iconfile = item.LaunchApp;
+                //
+                // If the LaunchApp is an image file, use it for the Jump List Item Icon
+                //
+                if (!string.IsNullOrWhiteSpace(iconfile) && System.IO.File.Exists(iconfile) && iconfile.IsImage())
+                {
+                    // Get the temporary file location for the icon
+                    string temp = System.IO.Path.Combine(
+                        App.TempDirectory.FullName,
+                        System.IO.Path.GetFileNameWithoutExtension(iconfile)
+                        ) + ".ico";
+
+                    //if (System.IO.File.Exists(temp))
+                    //    System.IO.File.Delete(temp);
+
+                    // If icon doesn't exist, create it
+                    if (!System.IO.File.Exists(temp))
+                        IconHelper.ConvertToIcon(iconfile, temp, 64);
+                    iconfile = temp;
+                }
+
                 var task = new JumpTask
                 {
                     ApplicationPath = appPath,
                     CustomCategory = category,
                     Arguments = string.Format("{0} {1}", item.ItemId, item.Text),
                     Title = item.Title,
-                    IconResourcePath = item.LaunchApp
+                    IconResourcePath = iconfile
                 };
                 jl.JumpItems.Add(task);
             }
