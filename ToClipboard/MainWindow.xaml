@@ -45,7 +45,6 @@
             -->
         </StackPanel>
         <ListView x:Name ="listView" Grid.Row="2"
-                  SelectionChanged="ListView_SelectionChanged"
                   >
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">

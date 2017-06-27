@@ -34,7 +34,7 @@ namespace ToClipboard
                     {
                         FileInfo file = new FileInfo(item.LaunchApp);
                         if (file.Exists)
-                            file.Open();
+                            file.OpenLocation();
                     }
                 }
             }

@@ -15,7 +15,6 @@ namespace ToClipboard
     public partial class MainWindow : Window
     {
         bool changed = false;
-        bool loading = true;
 
         public List<IItem> Items { get; set; }
 
@@ -24,7 +23,7 @@ namespace ToClipboard
         {
             InitializeComponent();
 
-            Title = App.TITLE + " v1.0.3";
+            Title = App.TITLE + " v1.0.4";
 
             DB = new Data.DataSQLite(true);
             //DB.EntityChanged += (e, a, b) => //changed = true;
@@ -43,7 +42,6 @@ namespace ToClipboard
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             //DB.SelectedJumpList = DB.First_JumpList();
-            loading = false;
         }
 
         private void Add_Clicked(object sender, RoutedEventArgs e)
@@ -61,18 +59,6 @@ namespace ToClipboard
             Close();
         }
 
-        private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //var listView = sender as ListView;
-            ////IItem item = listView.SelectedItems[0] as IItem;
-            //IItem item = listView.SelectedItem as IItem;
-            //Clipboard.SetText(item.Text);
-            ////var a = listView;
-
-            //DB.Item_Clicked(item);
-            //changed = true;
-        }
-
         protected override void OnClosed(EventArgs e)
         {
             base.OnClosed(e);
@@ -86,10 +72,9 @@ namespace ToClipboard
             var jl = new JumpList { ShowFrequentCategory = false, ShowRecentCategory = false };
 
             string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-
             string category = DB.SelectedJumpList.Name + " Jump List";
 
-            //App.TempDirectory.Open();
+            App.TempDirectory.OpenLocation();
 
             foreach (IItem item in DB.GetItems(DB.SelectedJumpList.JumpListId))
             {
@@ -97,16 +82,35 @@ namespace ToClipboard
                 //
                 // If the LaunchApp is an image file, use it for the Jump List Item Icon
                 //
-                App.AppAndIcon_IsImage(iconfile, tempIconLocation =>
-                {
-                    //if (tempIconLocation.Exists)
-                    //    tempIconLocation.Delete();
+                if (!App.Try_AppAndIcon_IsImage(iconfile, tempIconLocation =>
+                 {
+                     //tempIconLocation.DeleteIfExists();
 
-                    // If icon doesn't exist, create it
-                    if (!tempIconLocation.Exists)
-                        IconHelper.ConvertToIcon(iconfile, tempIconLocation.FullName, 64);
-                    iconfile = tempIconLocation.FullName;
-                });
+                     // If icon doesn't exist, create it
+                     if (!tempIconLocation.Exists)
+                         IconHelper.ImageToIcon(iconfile, tempIconLocation.FullName, 64);
+                     if (tempIconLocation.Exists(true))
+                         iconfile = tempIconLocation.FullName;
+                 }))
+                    App.Try_AppAndIcon_IsHttp(iconfile, tempIconLocation =>
+                    {
+                        //tempIconLocation.DeleteIfExists();
+                        if (!tempIconLocation.Exists)
+                        {
+                            var original = tempIconLocation.AppendName("_original");
+                            //original.DeleteIfExists();
+
+                            // Download Icon
+                            if (IconHelper.HttpToIcon(iconfile, original.FullName))
+                            {
+                                // Downloaded Icon may not actually be an icon file
+                                IconHelper.ImageToIcon(original.FullName, tempIconLocation.FullName);
+                                original.DeleteIfExists();
+                            }
+                        }
+                        if (tempIconLocation.Exists(true))
+                            iconfile = tempIconLocation.FullName;
+                    });
 
                 var task = new JumpTask
                 {
@@ -174,11 +178,8 @@ namespace ToClipboard
             IItem item = (IItem)textBox.DataContext;
 
             // If (old) item.LaunchApp is an image, delete its Icon if it exists
-            App.AppAndIcon_IsImage(item.LaunchApp, tempIconLocation =>
-            {
-                if (tempIconLocation.Exists)
-                    tempIconLocation.Delete();
-            });
+            App.Try_AppAndIcon_IsImage(item.LaunchApp, tempIconLocation => tempIconLocation.DeleteIfExists());
+            App.Try_AppAndIcon_IsHttp(item.LaunchApp, tempIconLocation => tempIconLocation.DeleteIfExists());
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)

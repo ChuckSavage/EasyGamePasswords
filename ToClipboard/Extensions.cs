@@ -8,10 +8,94 @@ namespace ToClipboard
     public static class Extensions
     {
         /// <summary>
+        /// Append name to current file name, returning a new file.
+        /// </summary>
+        /// <param name="value" />
+        /// <param name="name" />
+        /// <exception cref="PathTooLongException" />
+        public static FileInfo AppendName(this FileInfo value, string name)
+        {
+            name = value.NameWithoutExtension() + name + value.Extension;
+            return value.Rename(name);
+        }
+
+        /// <summary>
+        /// Combine directory's full name with passed parameters to create a new path.
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string Combine(this DirectoryInfo dir, params string[] name)
+        {
+            if (name.Any(n => n.Contains("..")))
+            {
+                List<string> path = dir.FullName.Split(Path.DirectorySeparatorChar).ToList();
+                foreach (string n in name)
+                {
+                    List<string> subpath = n.Split(Path.DirectorySeparatorChar).ToList();
+                    foreach (string s in subpath)
+                    {
+                        if (s == "..")
+                            path.RemoveAt(path.Count - 1);
+                        else
+                            path.Add(s);
+                    }
+                }
+                return string.Join(Path.DirectorySeparatorChar.ToString(), path);
+            }
+            {
+                List<string> path = new List<string> { dir.FullName };
+                path.AddRange(name);
+                return Path.Combine(path.ToArray());
+            }
+        }
+
+        public static void DeleteIfExists(this FileInfo file)
+        {
+            if (null != file)
+                DeleteFileIfExists(file.FullName);
+        }
+
+        public static void DeleteFileIfExists(this string file)
+        {
+            if (!string.IsNullOrWhiteSpace(file)
+                && System.IO.File.Exists(file))
+                System.IO.File.Delete(file);
+        }
+
+        public static bool Exists(this FileInfo file, bool refresh)
+        {
+            if (refresh)
+                file.Refresh();
+            return file.Exists;
+        }
+
+        /// <summary>
+        /// File within the directory (or sub-directory), doesn't check for its existence.
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static FileInfo File(this DirectoryInfo dir, params string[] name)
+        {
+            return new FileInfo(Combine(dir, name));
+        }
+
+        /// <summary>
+        /// Get File's Name without its extension
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string NameWithoutExtension(this FileInfo value)
+        {
+            return Path.GetFileNameWithoutExtension(value.Name);
+        }
+
+        /// <summary>
         /// Open in Explorer
         /// </summary>
         /// <param name="dir"></param>
-        public static void Open(this DirectoryInfo dir)
+        public static void OpenLocation(this DirectoryInfo dir)
         {
             dir.Refresh();
             if (!dir.Exists)
@@ -24,13 +108,36 @@ namespace ToClipboard
         /// Open with default 'open' program
         /// </summary>
         /// <param name="value"></param>
-        public static Process Open(this FileInfo file)
+        public static Process OpenLocation(this FileInfo file)
         {
             file.Refresh();
             if (!file.Exists)
                 throw new FileNotFoundException(file.FullName, file.FullName);
 
             return WindowsCommand(file.FullName, "Open", null);
+        }
+
+        /// <summary>
+        /// Rename the file (returning the new file), the original stays the same.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static FileInfo Rename(this FileInfo file, params string[] name)
+        {
+            return file.Directory.File(name);
+        }
+
+        /// <summary>
+        /// Create a new file based on current, with a different name and has the same extension.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="name"></param>
+        /// <exception cref="PathTooLongException" />
+        public static FileInfo SetName(this FileInfo file, string name)
+        {
+            name = Path.ChangeExtension(name, file.Extension);
+            return file.Rename(name);
         }
 
         public static Process WindowsCommand(this string path, string verb, string arguments)

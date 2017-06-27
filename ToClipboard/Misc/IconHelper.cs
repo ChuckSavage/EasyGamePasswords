@@ -2,6 +2,7 @@
  * Open source file from https://gist.github.com/darkfall/1656050
  */
 
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -9,19 +10,58 @@ using System.IO;
 namespace ToClipboard.Misc
 {
     /// <summary>
-    /// Provides helper methods for imaging
+    /// Provides helper methods for creating icons
     /// </summary>
     public static class IconHelper
     {
+        const string GOOGLE = @"http://www.google.com/s2/favicons?domain=";
+
         /// <summary>
-        /// Converts a PNG image to a icon (ico)
+        /// Download Icon from internet
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="outFile"></param>
+        /// <returns></returns>
+        public static bool HttpToIcon(Uri uri, string outFile)
+        {
+            if (null == uri
+                || uri.IsFile)
+                return false;
+
+            if (string.IsNullOrWhiteSpace(outFile))
+                return false;
+
+            var client = new System.Net.WebClient();
+            client.DownloadFile(
+                GOOGLE + uri.Host,
+                outFile);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Download Icon from internet
+        /// </summary>
+        /// <param name="uri"></param>
+        /// <param name="outFile"></param>
+        /// <returns></returns>
+        public static bool HttpToIcon(string uri, string outFile)
+        {
+            if (string.IsNullOrWhiteSpace(uri))
+                return false;
+            return HttpToIcon(new Uri(uri), outFile);
+        }
+
+
+        /// <summary>
+        /// Converts an image to an icon (ico)
         /// </summary>
         /// <param name="input">The input stream</param>
         /// <param name="output">The output stream</param>
         /// <param name="size">Needs to be a factor of 2 (16x16 px by default)</param>
         /// <param name="preserveAspectRatio">Preserve the aspect ratio</param>
         /// <returns>Wether or not the icon was succesfully generated</returns>
-        public static bool ConvertToIcon(Stream input, Stream output, int size = 16, bool preserveAspectRatio = false)
+        public static bool ImageToIcon(Stream input, Stream output, int size = 16, bool preserveAspectRatio = false)
         {
             var inputBitmap = (Bitmap)Bitmap.FromStream(input);
             if (inputBitmap == null)
@@ -94,19 +134,19 @@ namespace ToClipboard.Misc
         }
 
         /// <summary>
-        /// Converts a PNG image to a icon (ico)
+        /// Converts an image to an icon (ico)
         /// </summary>
         /// <param name="inputPath">The input path</param>
         /// <param name="outputPath">The output path</param>
         /// <param name="size">Needs to be a factor of 2 (16x16 px by default)</param>
         /// <param name="preserveAspectRatio">Preserve the aspect ratio</param>
         /// <returns>Wether or not the icon was succesfully generated</returns>
-        public static bool ConvertToIcon(string inputPath, string outputPath, int size = 16, bool preserveAspectRatio = false)
+        public static bool ImageToIcon(string inputPath, string outputPath, int size = 16, bool preserveAspectRatio = false)
         {
             using (FileStream inputStream = new FileStream(inputPath, FileMode.Open))
             using (FileStream outputStream = new FileStream(outputPath, FileMode.OpenOrCreate))
             {
-                return ConvertToIcon(inputStream, outputStream, size, preserveAspectRatio);
+                return ImageToIcon(inputStream, outputStream, size, preserveAspectRatio);
             }
         }
     }

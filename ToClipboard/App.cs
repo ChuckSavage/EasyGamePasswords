@@ -9,12 +9,27 @@ namespace ToClipboard
         public const string TITLE = "JumpList to Clipboard";
         public const string COMPANY = "Other";
 
+        public static bool Try_AppAndIcon_IsHttp(string httplocation, Action<FileInfo> action)
+        {
+            Uri uri;
+            if (!string.IsNullOrWhiteSpace(httplocation)
+                && Uri.TryCreate(httplocation, UriKind.Absolute, out uri)
+                && !uri.IsFile
+                )
+            {
+                var iconLocation = IconLocation(uri);
+                action(iconLocation);
+                return true;
+            }
+            return false;
+        }
+
         /// <summary>
         /// If icon is an image, run an action with the icon location.
         /// </summary>
         /// <param name="iconfile"></param>
         /// <param name="action"></param>
-        public static void AppAndIcon_IsImage(string iconfile, Action<FileInfo> action)
+        public static bool Try_AppAndIcon_IsImage(string iconfile, Action<FileInfo> action)
         {
             if (!string.IsNullOrWhiteSpace(iconfile)
                 && File.Exists(iconfile)
@@ -23,7 +38,9 @@ namespace ToClipboard
                 // Get the temporary file location for the icon
                 var temp = IconLocation(iconfile);
                 action(temp);
+                return true;
             }
+            return false;
         }
 
         static string AppName
@@ -59,17 +76,27 @@ namespace ToClipboard
         static DirectoryInfo _DataDirectory;
 
         /// <summary>
-        /// 
+        /// Get temp file for the icon.
         /// </summary>
-        /// <param name="fromFile"></param>
+        /// <param name="file"></param>
         /// <returns></returns>
-        public static FileInfo IconLocation(string fromFile)
+        public static FileInfo IconLocation(string file)
         {
-            string temp = Path.Combine(
-                        TempDirectory.FullName,
-                        Path.GetFileNameWithoutExtension(fromFile)
-                        ) + ".ico";
-            return new FileInfo(temp);
+            return TempDirectory.File(Path.GetFileNameWithoutExtension(file) + ".ico");
+        }
+
+        /// <summary>
+        /// Get temp file for the icon.
+        /// </summary>
+        /// <param name="IN"></param>
+        /// <returns></returns>
+        public static FileInfo IconLocation(Uri uri)
+        {
+            if (uri.IsFile)
+                return IconLocation(uri.AbsolutePath);
+            // Remove all periods in host name "www.domain.com" becomes "wwwdomaincom"
+            string temp = uri.Host.Replace(".", "").ToLower();
+            return TempDirectory.File(temp + ".ico");
         }
 
         public static string PathAdd_Company_and_AppName(string path)
