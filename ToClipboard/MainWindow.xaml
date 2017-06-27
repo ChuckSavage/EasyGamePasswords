@@ -8,7 +8,6 @@
         mc:Ignorable="d"
         Title="JumpList to Clipboard" Height="350" Width="Auto"
         x:Name="_this"
-        Loaded="Window_Loaded"
         >
     <Window.Resources>
         <CollectionViewSource x:Key="JumpListLookup" />

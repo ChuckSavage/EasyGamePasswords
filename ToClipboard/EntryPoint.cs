@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ToClipboard.Model;
@@ -21,6 +22,7 @@ namespace ToClipboard
                 long itemId;
                 if (long.TryParse(args.Take(1).SingleOrDefault() ?? "0", out itemId) && itemId > 0)
                 {
+                    //Debugger.Launch();
                     IItem item = null;
                     using (var db = new Data.DataSQLite())
                     {
@@ -32,9 +34,20 @@ namespace ToClipboard
                     // If set to launch the app after copying text to clipboard
                     if (null != item && item.DoLaunchApp && !string.IsNullOrWhiteSpace(item.LaunchApp))
                     {
-                        FileInfo file = new FileInfo(item.LaunchApp);
-                        if (file.Exists)
-                            file.OpenLocation();
+                        try
+                        {
+                            // Throws NotSupportedException for URI's
+                            FileInfo file = new FileInfo(item.LaunchApp);
+                            if (file.Exists)
+                                file.OpenLocation();
+                        }
+                        catch (NotSupportedException)
+                        {
+                            string http = item.LaunchApp.ToLower();
+                            if (!http.Contains("http"))
+                                http = "http://" + http;
+                            Process.Start(http);
+                        }
                     }
                 }
             }

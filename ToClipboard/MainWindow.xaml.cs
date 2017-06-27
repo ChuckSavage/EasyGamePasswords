@@ -26,22 +26,8 @@ namespace ToClipboard
             Title = App.TITLE + " v1.0.4";
 
             DB = new Data.DataSQLite(true);
-            //DB.EntityChanged += (e, a, b) => //changed = true;
-            //{
-            //    changed = true;
-            //};
             DB.Bind_JumpLists_ItemsSource(cbJumpList);
-            //IJumpList jumpList = DB.SelectedJumpList;//.First_JumpList();
-            //cbJumpList.SelectedItem = jumpList = db.First_JumpList();
-            //cbJumpList.Text = jumpList.Name;
             RefreshItems();
-
-            //this.DataContext = this;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            //DB.SelectedJumpList = DB.First_JumpList();
         }
 
         private void Add_Clicked(object sender, RoutedEventArgs e)
@@ -92,6 +78,10 @@ namespace ToClipboard
                      if (tempIconLocation.Exists(true))
                          iconfile = tempIconLocation.FullName;
                  }))
+                    /*
+                     * If not an image, then see if LaunchApp is a website and download
+                     * the website's icon
+                     */
                     App.Try_AppAndIcon_IsHttp(iconfile, tempIconLocation =>
                     {
                         //tempIconLocation.DeleteIfExists();
@@ -150,15 +140,6 @@ namespace ToClipboard
             DB.SaveChanges();
             changed = false;
         }
-
-        //private void cbJumpList_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    if (loading) return;
-        //    IJumpList jumpList = cbJumpList.SelectedItem as IJumpList;
-        //    long id = (long)cbJumpList.SelectedValue;
-        //    if (jumpList.JumpListId != DB.JumpListId)
-        //        Bind_ListView_Items(jumpList?.JumpListId ?? 1);
-        //}
 
         private void LaunchApp_CheckBox_Checked(object sender, RoutedEventArgs e)
         {
