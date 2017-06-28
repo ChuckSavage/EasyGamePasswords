@@ -23,7 +23,7 @@ namespace ToClipboard
         {
             InitializeComponent();
 
-            Title = App.TITLE + " v1.0.4";
+            Title = App.TITLE + " v1.0.5";
 
             DB = new Data.DataSQLite(true);
             DB.Bind_JumpLists_ItemsSource(cbJumpList);
@@ -60,7 +60,7 @@ namespace ToClipboard
             string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
             string category = DB.SelectedJumpList.Name + " Jump List";
 
-            App.TempDirectory.OpenLocation();
+            //App.TempDirectory.OpenLocation();
 
             foreach (IItem item in DB.GetItems(DB.SelectedJumpList.JumpListId))
             {
