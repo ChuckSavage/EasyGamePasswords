@@ -43,6 +43,17 @@ namespace ToClipboard
             return false;
         }
 
+        public static bool Try_AppAndIcon_IsSteam(string iconfile, Action<FileInfo> action)
+        {
+            if (!string.IsNullOrWhiteSpace(iconfile)
+                && iconfile.ToLower().StartsWith("steam"))
+            {
+                action(null);
+                return true;
+            }
+            return false;
+        }
+
         static string AppName
         {
             get

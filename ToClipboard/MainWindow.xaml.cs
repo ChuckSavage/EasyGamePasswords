@@ -23,7 +23,7 @@ namespace ToClipboard
         {
             InitializeComponent();
 
-            Title = App.TITLE + " v1.0.5";
+            Title = App.TITLE + " v1.0.6";
 
             DB = new Data.DataSQLite(true);
             DB.Bind_JumpLists_ItemsSource(cbJumpList);
