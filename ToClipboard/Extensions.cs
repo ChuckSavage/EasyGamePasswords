@@ -50,6 +50,35 @@ namespace ToClipboard
             }
         }
 
+        /// <summary>
+        /// Does the string contain any of the arguments supplied, count the number of occurances.
+        /// </summary>
+        /// <param name="IN"></param>
+        /// <param name="count"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static bool ContainsAny(this string IN, out int count, params string[] args)
+        {
+            count = 0;
+            foreach (string arg in args)
+                if (IN.Contains(arg))
+                    count++;
+            return count > 0;
+        }
+
+        /// <summary>
+        /// Counts the number of arguments that are matched in the string.
+        /// </summary>
+        /// <param name="IN"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static int ContainsCount(this string IN, params string[] args)
+        {
+            int count;
+            ContainsAny(IN, out count, args);
+            return count;
+        }
+
         public static void DeleteIfExists(this FileInfo file)
         {
             if (null != file)
@@ -61,6 +90,17 @@ namespace ToClipboard
             if (!string.IsNullOrWhiteSpace(file)
                 && System.IO.File.Exists(file))
                 System.IO.File.Delete(file);
+        }
+
+        /// <summary>
+        /// Directory within the directory (or sub-directory), doesn't check for its existence.
+        /// </summary>
+        /// <param name="dir"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static DirectoryInfo Directory(this DirectoryInfo dir, params string[] name)
+        {
+            return new DirectoryInfo(Combine(dir, name));
         }
 
         public static bool Exists(this FileInfo file, bool refresh)

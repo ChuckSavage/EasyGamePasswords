@@ -34,7 +34,7 @@ namespace ToClipboard
                     // If set to launch the app after copying text to clipboard
                     if (null != item && item.DoLaunchApp && !string.IsNullOrWhiteSpace(item.LaunchApp))
                     {
-                        if (!App.Try_AppAndIcon_IsSteam(item.LaunchApp, icon => Process.Start(item.LaunchApp)))
+                        if (!App.Try_AppAndIcon_IsSteam(item, icon => Process.Start(item.LaunchApp)))
                             try
                             {
                                 // Throws NotSupportedException for URI's

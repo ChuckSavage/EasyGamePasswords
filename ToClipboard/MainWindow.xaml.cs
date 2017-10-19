@@ -23,7 +23,7 @@ namespace ToClipboard
         {
             InitializeComponent();
 
-            Title = App.TITLE + " v1.0.6";
+            Title = App.TITLE + " v1.0.7";
 
             DB = new Data.DataSQLite(true);
             DB.Bind_JumpLists_ItemsSource(cbJumpList);
@@ -68,39 +68,44 @@ namespace ToClipboard
                 //
                 // If the LaunchApp is an image file, use it for the Jump List Item Icon
                 //
-                if (!App.Try_AppAndIcon_IsImage(iconfile, tempIconLocation =>
-                 {
-                     //tempIconLocation.DeleteIfExists();
+                if (App.Try_AppAndIcon_IsImage(iconfile, tempIconLocation =>
+                {
+                    //tempIconLocation.DeleteIfExists();
 
-                     // If icon doesn't exist, create it
-                     if (!tempIconLocation.Exists)
-                         IconHelper.ImageToIcon(iconfile, tempIconLocation.FullName, 64);
-                     if (tempIconLocation.Exists(true))
-                         iconfile = tempIconLocation.FullName;
-                 }))
-                    /*
-                     * If not an image, then see if LaunchApp is a website and download
-                     * the website's icon
-                     */
-                    App.Try_AppAndIcon_IsHttp(iconfile, tempIconLocation =>
+                    // If icon doesn't exist, create it
+                    if (!tempIconLocation.Exists)
+                        IconHelper.ImageToIcon(iconfile, tempIconLocation.FullName, 64);
+                    if (tempIconLocation.Exists(true))
+                        iconfile = tempIconLocation.FullName;
+                })) { }
+
+                // If is a steam app
+                else if (App.Try_AppAndIcon_IsSteam(item, steamApp => iconfile = steamApp.FullName))
+                { }
+
+                /*
+                 * If not an image, then see if LaunchApp is a website and download
+                 * the website's icon
+                 */
+                else if (App.Try_AppAndIcon_IsHttp(iconfile, tempIconLocation =>
+                {
+                    //tempIconLocation.DeleteIfExists();
+                    if (!tempIconLocation.Exists)
                     {
-                        //tempIconLocation.DeleteIfExists();
-                        if (!tempIconLocation.Exists)
-                        {
-                            var original = tempIconLocation.AppendName("_original");
-                            //original.DeleteIfExists();
+                        var original = tempIconLocation.AppendName("_original");
+                        //original.DeleteIfExists();
 
-                            // Download Icon
-                            if (IconHelper.HttpToIcon(iconfile, original.FullName))
-                            {
-                                // Downloaded Icon may not actually be an icon file
-                                IconHelper.ImageToIcon(original.FullName, tempIconLocation.FullName);
-                                original.DeleteIfExists();
-                            }
+                        // Download Icon
+                        if (IconHelper.HttpToIcon(iconfile, original.FullName))
+                        {
+                            // Downloaded Icon may not actually be an icon file
+                            IconHelper.ImageToIcon(original.FullName, tempIconLocation.FullName);
+                            original.DeleteIfExists();
                         }
-                        if (tempIconLocation.Exists(true))
-                            iconfile = tempIconLocation.FullName;
-                    });
+                    }
+                    if (tempIconLocation.Exists(true))
+                        iconfile = tempIconLocation.FullName;
+                })) { }
 
                 var task = new JumpTask
                 {
