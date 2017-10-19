@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using ToClipboard.Model;
-using System.Linq;
 
 namespace ToClipboard
 {
@@ -129,6 +129,22 @@ namespace ToClipboard
             return path;
         }
 
+        #region ProgramFiles X86
+        public static readonly DirectoryInfo ProgramFiles_x86;
+
+        // the following is from: https://stackoverflow.com/a/194223/353147
+        static string _ProgramFilesx86()
+        {
+            if (8 == IntPtr.Size
+                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
+            {
+                return Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            }
+
+            return Environment.GetEnvironmentVariable("ProgramFiles");
+        }
+        #endregion
+
         static Dictionary<string, FileInfo> _steamApps;
         public static FileInfo SteamApp(IItem item)
         {
@@ -149,7 +165,6 @@ namespace ToClipboard
                     // Find directory that most matches the title given by the user
                     var dirsPairs = dirs
                         .Select(d => new { Dir = d, Count = d.Name.ToLower().ContainsCount(titles) });
-                    //int max = dirs.Max(d => d.Count);
                     var dirPair = dirsPairs.OrderByDescending(d => d.Count).First();
 
                     var files = dirPair.Dir.GetFiles("*.exe", SearchOption.AllDirectories);
@@ -171,7 +186,6 @@ namespace ToClipboard
             }
             return null;
         }
-
 
         public static DirectoryInfo SteamAppsDirectory
         {
@@ -218,21 +232,5 @@ namespace ToClipboard
             }
         }
         static DirectoryInfo _UserData;
-
-        #region ProgramFiles X86
-        public static DirectoryInfo ProgramFiles_x86;
-
-        // the following is from: https://stackoverflow.com/a/194223/353147
-        static string _ProgramFilesx86()
-        {
-            if (8 == IntPtr.Size
-                || (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432"))))
-            {
-                return Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-            }
-
-            return Environment.GetEnvironmentVariable("ProgramFiles");
-        }
-        #endregion
     }
 }
