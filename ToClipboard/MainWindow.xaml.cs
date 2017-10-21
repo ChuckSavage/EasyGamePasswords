@@ -23,7 +23,7 @@ namespace ToClipboard
         {
             InitializeComponent();
 
-            Title = App.TITLE + " v1.0.7";
+            Title = App.TITLE + " v1.0.8";
 
             DB = new Data.DataSQLite(true);
             DB.Bind_JumpLists_ItemsSource(cbJumpList);
@@ -111,7 +111,7 @@ namespace ToClipboard
                 {
                     ApplicationPath = appPath,
                     CustomCategory = category,
-                    Arguments = string.Format("{0} {1}", item.ItemId, item.Text),
+                    Arguments = item.ItemId.ToString(),
                     Title = item.Title,
                     IconResourcePath = iconfile
                 };
