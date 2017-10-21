@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
+using RestoreWindowPlace;
 using ToClipboard.Model;
 
 namespace ToClipboard
@@ -11,10 +13,24 @@ namespace ToClipboard
     {
         public const string TITLE = "JumpList to Clipboard";
         public const string COMPANY = "Other";
+        public readonly WindowPlace WindowPlace; // Save locations of WPF windows
+        public static App CURRENT { get; private set; }
 
         static App()
         {
             ProgramFiles_x86 = new DirectoryInfo(_ProgramFilesx86());
+        }
+
+        public App()
+        {
+            WindowPlace = new WindowPlace(UserDataDirectory.File("windowLocations.xml").FullName);
+            CURRENT = this;
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+            this.WindowPlace.Save();
         }
 
         public static bool Try_AppAndIcon_IsHttp(string httplocation, Action<FileInfo> action)

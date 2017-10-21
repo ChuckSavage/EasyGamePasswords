@@ -17,13 +17,13 @@ namespace ToClipboard
         bool changed = false;
 
         public List<IItem> Items { get; set; }
-
         protected IData DB { get; private set; }
+
         public MainWindow()
         {
             InitializeComponent();
-
-            Title = App.TITLE + " v1.0.8";
+            Title = App.TITLE + " v1.0.9";
+            App.CURRENT.WindowPlace.Register(this, typeof(MainWindow).Name);
 
             DB = new Data.DataSQLite(true);
             DB.Bind_JumpLists_ItemsSource(cbJumpList);
