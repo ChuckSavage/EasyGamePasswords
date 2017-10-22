@@ -31,6 +31,14 @@
                 <MenuItem Header="Most Used" />
                 <MenuItem Header="Last Used" />
             </MenuItem>
+            <MenuItem Header="S_hortcuts">
+                <MenuItem Header="Steam Location" Click="SteamLocation_Click"
+                          IsEnabled="{Binding ElementName=_this, Path=SteamFolderExists}"
+                          />
+                <Separator />
+                <MenuItem Header="Data Directory" Click="DataDirectory_Click"
+                          ToolTip="Your data, click here to backup your files." />
+            </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <Label>Jump List:</Label>

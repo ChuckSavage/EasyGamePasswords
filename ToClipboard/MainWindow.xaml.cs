@@ -22,7 +22,7 @@ namespace ToClipboard
         public MainWindow()
         {
             InitializeComponent();
-            Title = App.TITLE + " v1.0.9";
+            Title = App.TITLE + " v1.0.10";
             App.CURRENT.WindowPlace.Register(this, typeof(MainWindow).Name);
 
             DB = new Data.DataSQLite(true);
@@ -175,6 +175,18 @@ namespace ToClipboard
             DB.Delete_Item(item);
             RefreshItems();
             changed = true;
+        }
+
+        protected bool SteamFolderExists { get { return App.SteamAppsDirectory.Exists; } }
+
+        private void SteamLocation_Click(object sender, RoutedEventArgs e)
+        {
+            App.SteamAppsDirectory.OpenLocation();
+        }
+
+        private void DataDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            App.UserDataDirectory.OpenLocation();
         }
     }
 }
