@@ -9,9 +9,10 @@ using ToClipboard.Model;
 namespace ToClipboard.Migrations
 {
     [DbContext(typeof(SQLiteDbContext))]
-    partial class SQLiteDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171027083646_SortBy")]
+    partial class SortBy
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.3");

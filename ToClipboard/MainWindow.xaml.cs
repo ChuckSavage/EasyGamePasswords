@@ -6,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Shell;
 using ToClipboard.Misc;
 using ToClipboard.Model;
+using System.Linq;
 
 namespace ToClipboard
 {
@@ -22,7 +23,7 @@ namespace ToClipboard
         public MainWindow()
         {
             InitializeComponent();
-            Title = App.TITLE + " v1.0.10";
+            Title = App.TITLE + " v1.0.11";
             App.CURRENT.WindowPlace.Register(this); // save & restore window size and location
 
             DB = new Data.DataSQLite(true);
@@ -60,9 +61,31 @@ namespace ToClipboard
             string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
             string category = DB.SelectedJumpList.Name + " Jump List";
 
-            //App.TempDirectory.OpenLocation();
+            // Apply sort
+            IItem[] items = DB.GetItems(DB.SelectedJumpList.JumpListId);
+            switch (DB.SelectedJumpList.SortBy)
+            {
+                case SortType.Ascending:
+                    items = items.OrderBy(i => i.Title).ToArray();
+                    break;
+                case SortType.Descending:
+                    items = items.OrderByDescending(i => i.Title).ToArray();
+                    break;
+                case SortType.Percentage: // not implemented yet
+                case SortType.LastUsed:
+                    items = items.OrderByDescending(i => i.DateLastUsed).ToArray();
+                    break;
+                case SortType.MostUsed:
+                    items = items.OrderByDescending(i => i.CountUsed)
+                        .ThenByDescending(i => i.DateLastUsed)
+                        .ToArray();
+                    break;
+                case SortType.OrderAdded: // no change
+                default:
+                    break;
+            }
 
-            foreach (IItem item in DB.GetItems(DB.SelectedJumpList.JumpListId))
+            foreach (IItem item in items)
             {
                 string iconfile = item.LaunchApp;
                 //
@@ -194,6 +217,8 @@ namespace ToClipboard
             App.TempDirectory.OpenLocation();
         }
 
+        protected SortType JumpListSort { get { return DB.SelectedJumpList.SortBy; } }
+
         private void Sort_Clicked(object sender, RoutedEventArgs e)
         {
             MenuItem menu = (MenuItem)sender;
@@ -201,7 +226,6 @@ namespace ToClipboard
             SortType sort = name.ToEnum<SortType>();
             DB.SelectedJumpList.SortBy = sort;
             changed = true;
-            var s = sort;
         }
     }
 }

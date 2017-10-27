@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ToClipboard"
+        xmlns:misc="clr-namespace:ToClipboard.Misc"
         xmlns:model="clr-namespace:ToClipboard.Model"
         mc:Ignorable="d"
         Title="JumpList to Clipboard" Height="350" Width="Auto"
@@ -26,12 +27,24 @@
             </MenuItem>
             <MenuItem Header="_Add" InputGestureText="F4" Click="Add_Clicked" />
             <MenuItem Header="_Sort">
-                <MenuItem Header="Ascending" Click="Sort_Clicked" />
-                <MenuItem Header="Descending" Click="Sort_Clicked" />
-                <MenuItem Header="Last Used" Click="Sort_Clicked" />
-                <MenuItem Header="Most Used" Click="Sort_Clicked" />
-                <MenuItem Header="Order Added" Click="Sort_Clicked" />
-                <MenuItem Header="Percentage" Click="Sort_Clicked" />
+                <MenuItem Header="Ascending" Click="Sort_Clicked" IsCheckable="True"
+                          IsChecked="{Binding ElementName=_this, Path=JumpListSort, Converter={misc:SortTypeConverter DesiredSort=Ascending}}"
+                          />
+                <MenuItem Header="Descending" Click="Sort_Clicked" IsCheckable="True"
+                          IsChecked="{Binding ElementName=_this, Path=JumpListSort, Converter={misc:SortTypeConverter DesiredSort=Descending}}"
+                          />
+                <MenuItem Header="Last Used" Click="Sort_Clicked" IsCheckable="True"
+                          IsChecked="{Binding ElementName=_this, Path=JumpListSort, Converter={misc:SortTypeConverter DesiredSort=LastUsed}}"
+                          />
+                <MenuItem Header="Most Used" Click="Sort_Clicked" IsCheckable="True"
+                          IsChecked="{Binding ElementName=_this, Path=JumpListSort, Converter={misc:SortTypeConverter DesiredSort=MostUsed}}"
+                          />
+                <MenuItem Header="Order Added" Click="Sort_Clicked" IsCheckable="True"
+                          IsChecked="{Binding ElementName=_this, Path=JumpListSort, Converter={misc:SortTypeConverter DesiredSort=OrderAdded}}"
+                          />
+                <MenuItem Header="Percentage" Click="Sort_Clicked" IsCheckable="True"
+                          IsChecked="{Binding ElementName=_this, Path=JumpListSort, Converter={misc:SortTypeConverter DesiredSort=Percentage}}"
+                          />
             </MenuItem>
             <MenuItem Header="S_hortcuts">
                 <MenuItem Header="Steam Location" Click="SteamLocation_Click"

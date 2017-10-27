@@ -1,0 +1,21 @@
+To add a database change,
+
+1 - change the model
+2 - Open the Package Manager Console (Tools > NuGet Package Manager)
+    Be sure the directory is the solution folder (dir, cd)
+    Be sure ToClipboard is the Default project
+3 - Type "add-migration"
+4 - Add a name
+
+The name will be CurrentDateAndTime_name
+
+If you get the error, File not found: microsoft.EntityFrameworkCore.design, or something similar. 
+
+In the Visual Studio Installer app:
+   Be sure you're working with the most up to date Visual Studio, 
+   and that .Net Core is enabled in individual features.
+
+   Also be sure the .Net version for this project is enabled as well.
+
+You may also need to run "Update-Package" via the Package Manager Console, 
+  see: https://stackoverflow.com/a/46004440/353147
