@@ -214,6 +214,9 @@ namespace ToClipboard
         }
         static DirectoryInfo _SteamAppsDirectory;
 
+        /// <summary>
+        /// The user's temp directory \[company]\[AppName]
+        /// </summary>
         public static DirectoryInfo TempDirectory
         {
             get

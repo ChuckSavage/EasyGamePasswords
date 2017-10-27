@@ -125,8 +125,8 @@
     <Reference Include="Remotion.Linq, Version=2.1.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.1.1\lib\net45\Remotion.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="RestoreWindowPlace, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestoreWindowPlace.1.4.0.0\lib\net45\RestoreWindowPlace.dll</HintPath>
+    <Reference Include="RestoreWindowPlace, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestoreWindowPlace.1.5.0.0\lib\net45\RestoreWindowPlace.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -200,6 +200,7 @@
     <Compile Include="Misc\Extensions.cs" />
     <Compile Include="Misc\IconHelper.cs" />
     <Compile Include="Misc\MessageBoxEx.cs" />
+    <Compile Include="Misc\Utils.cs" />
     <Compile Include="Model\Events.cs" />
     <Compile Include="Model\IData.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -207,6 +208,7 @@
     </Compile>
     <Compile Include="Model\IItem.cs" />
     <Compile Include="Model\IJumpList.cs" />
+    <Compile Include="Model\SortType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -26,10 +26,12 @@
             </MenuItem>
             <MenuItem Header="_Add" InputGestureText="F4" Click="Add_Clicked" />
             <MenuItem Header="_Sort">
-                <MenuItem Header="Ascending" />
-                <MenuItem Header="Descending" />
-                <MenuItem Header="Most Used" />
-                <MenuItem Header="Last Used" />
+                <MenuItem Header="Ascending" Click="Sort_Clicked" />
+                <MenuItem Header="Descending" Click="Sort_Clicked" />
+                <MenuItem Header="Last Used" Click="Sort_Clicked" />
+                <MenuItem Header="Most Used" Click="Sort_Clicked" />
+                <MenuItem Header="Order Added" Click="Sort_Clicked" />
+                <MenuItem Header="Percentage" Click="Sort_Clicked" />
             </MenuItem>
             <MenuItem Header="S_hortcuts">
                 <MenuItem Header="Steam Location" Click="SteamLocation_Click"
@@ -38,6 +40,9 @@
                 <Separator />
                 <MenuItem Header="Data Directory" Click="DataDirectory_Click"
                           ToolTip="Your data, click here to backup your files." />
+                <MenuItem Header="Temp Directory" Click="TempDirectory_Click" 
+                          ToolTip="Whenever the database is altered with a change to its structure, a backup of the database is made here."
+                          />
             </MenuItem>
         </Menu>
         <StackPanel Grid.Row="1" Orientation="Horizontal">

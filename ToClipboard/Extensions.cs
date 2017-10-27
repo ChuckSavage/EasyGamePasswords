@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using ToClipboard.Misc;
 
 namespace ToClipboard
 {
@@ -77,6 +79,20 @@ namespace ToClipboard
             int count;
             ContainsAny(IN, out count, args);
             return count;
+        }
+
+        /// <summary>
+        /// Copy file and give it a unique name file_1, file_2, etc. If no destination is supplied, then
+        /// the current directory is assumed.
+        /// </summary>
+        /// <param name="IN"></param>
+        /// <param name="destination"></param>
+        /// <returns>New file name</returns>
+        public static string CopyToUnique(this FileInfo IN, DirectoryInfo destination = null)
+        {
+            string newLocation = Utils.GetUniqueName(IN, destination);
+            System.IO.File.Copy(IN.FullName, newLocation);
+            return newLocation;
         }
 
         public static void DeleteIfExists(this FileInfo file)
@@ -178,6 +194,17 @@ namespace ToClipboard
         {
             name = Path.ChangeExtension(name, file.Extension);
             return file.Rename(name);
+        }
+
+        /// <summary>
+        /// Convert string to its enum type, removing any spaces.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static T ToEnum<T>(this string s)
+        {
+            return (T)Enum.Parse(typeof(T), s.Replace(" ", string.Empty));
         }
 
         public static Process WindowsCommand(this string path, string verb, string arguments)

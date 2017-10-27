@@ -1,14 +1,12 @@
-﻿using ToClipboard.Data.Tables;
-using ToClipboard.Model;
-using System.Collections.ObjectModel;
+﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System;
-using System.Windows.Controls;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Controls;
 using Microsoft.EntityFrameworkCore;
+using ToClipboard.Data.Tables;
+using ToClipboard.Model;
 
 namespace ToClipboard.Data
 {
@@ -34,7 +32,15 @@ namespace ToClipboard.Data
             //SQLiteDbContext._stateListener.Changing += _stateListener_Changing;
             //SQLiteDbContext._stateListener.Changed += _stateListener_Changed;
 
-            db.Database.Migrate(); // Microsoft.EntityFrameworkCore  // Ensure database is created with all changes to tables applied
+            // If a change is about to be made to the structure of the database...
+            if (database.Exists && db.Database.GetPendingMigrations().Any())
+            {
+                // Make backup of database
+                string newLocation = database.CopyToUnique(App.TempDirectory);
+                var s = newLocation;
+            }
+            db.Database.Migrate(); // Ensure database is up to date with all changes to tables applied
+                                   // Microsoft.EntityFrameworkCore
 
             if (!db.JumpLists.Any())
             {

@@ -23,7 +23,7 @@ namespace ToClipboard
         {
             InitializeComponent();
             Title = App.TITLE + " v1.0.10";
-            App.CURRENT.WindowPlace.Register(this, typeof(MainWindow).Name);
+            App.CURRENT.WindowPlace.Register(this); // save & restore window size and location
 
             DB = new Data.DataSQLite(true);
             DB.Bind_JumpLists_ItemsSource(cbJumpList);
@@ -187,6 +187,21 @@ namespace ToClipboard
         private void DataDirectory_Click(object sender, RoutedEventArgs e)
         {
             App.UserDataDirectory.OpenLocation();
+        }
+
+        private void TempDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            App.TempDirectory.OpenLocation();
+        }
+
+        private void Sort_Clicked(object sender, RoutedEventArgs e)
+        {
+            MenuItem menu = (MenuItem)sender;
+            string name = (string)menu.Header;
+            SortType sort = name.ToEnum<SortType>();
+            DB.SelectedJumpList.SortBy = sort;
+            changed = true;
+            var s = sort;
         }
     }
 }
