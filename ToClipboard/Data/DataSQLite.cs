@@ -36,7 +36,7 @@ namespace ToClipboard.Data
             if (database.Exists && db.Database.GetPendingMigrations().Any())
             {
                 // Make backup of database
-                database.CopyToUnique(App.TempDirectory);
+                database.CopyToUnique(App.TempDirectory, dateTimeStamp: true);
             }
             db.Database.Migrate(); // Ensure database is up to date with all changes to tables applied
                                    // Microsoft.EntityFrameworkCore

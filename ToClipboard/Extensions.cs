@@ -88,9 +88,13 @@ namespace ToClipboard
         /// <param name="IN"></param>
         /// <param name="destination"></param>
         /// <returns>New file name</returns>
-        public static string CopyToUnique(this FileInfo IN, DirectoryInfo destination = null)
+        public static string CopyToUnique(this FileInfo IN, DirectoryInfo destination = null, bool dateTimeStamp = false)
         {
-            string newLocation = Utils.GetUniqueName(IN, destination);
+            string newLocation;
+            if (!dateTimeStamp)
+                newLocation = Utils.GetUniqueName(IN, destination);
+            else
+                newLocation = IN.AppendName("_" + DateTime.Now.ToString("yyyyMMddHHmmss")).FullName;
             System.IO.File.Copy(IN.FullName, newLocation);
             return newLocation;
         }
