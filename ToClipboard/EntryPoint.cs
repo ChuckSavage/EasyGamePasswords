@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows;
 using ToClipboard.Model;
 
 namespace ToClipboard
@@ -16,7 +15,7 @@ namespace ToClipboard
         [STAThread]
         public static void Main(string[] args)
         {
-            Window window = null;
+            bool hidden = false;
             //Debugger.Launch();
             // Args has the format of "ITEMID" if lanched from JumpList item
             if (args != null && args.Length == 1)
@@ -24,7 +23,7 @@ namespace ToClipboard
                 long itemId;
                 if (long.TryParse(args[0] ?? "0", out itemId) && itemId > 0)
                 {
-                    window = new SortJumpList();
+                    hidden = true;
                     IItem item = null;
                     using (var db = new Data.DataSQLite())
                     {
@@ -58,9 +57,11 @@ namespace ToClipboard
                     }
                 }
             }
-            var app = new App();
-            app.InitializeComponent();
-            app.Run(window);
+            var app = new App()
+            {
+                HideOnRun = hidden
+            };
+            app.Run();
         }
     }
 }

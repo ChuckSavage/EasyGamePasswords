@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace ToClipboard
 {
@@ -13,5 +7,18 @@ namespace ToClipboard
     /// </summary>
     public partial class App : Application
     {
+        public bool HideOnRun { get; set; }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            if (!HideOnRun)
+                new MainWindow().Show();
+            else
+            {
+                ToClipboard.MainWindow.CreateJumpList();
+                System.Windows.Application.Current.Shutdown();
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace ToClipboard
         public MainWindow()
         {
             InitializeComponent();
-            Title = App.TITLE + " v1.0.13";
+            Title = App.TITLE + " v1.0.14";
             App.CURRENT.WindowPlace.Register(this); // save & restore window size and location
 
             DB = new Data.DataSQLite(true);
