@@ -26,35 +26,34 @@ namespace ToClipboard
                 {
                     window = new SortJumpList();
                     IItem item = null;
-                    IData db;
-                    using (db = new Data.DataSQLite())
+                    using (var db = new Data.DataSQLite())
                     {
                         item = db.Item_Clicked(itemId);
                         db.SaveChanges();
-                        if (null != item)
-                        {
-                            if (!string.IsNullOrWhiteSpace(item.Text))
-                                System.Windows.Clipboard.SetText(item.Text);
+                    }
+                    if (null != item)
+                    {
+                        if (!string.IsNullOrWhiteSpace(item.Text))
+                            System.Windows.Clipboard.SetText(item.Text);
 
-                            // If set to launch the app after copying text to clipboard
-                            if (item.DoLaunchApp && !string.IsNullOrWhiteSpace(item.LaunchApp))
-                            {
-                                if (!App.Try_AppAndIcon_IsSteam(item, icon => Process.Start(item.LaunchApp)))
-                                    try
-                                    {
-                                        // Throws NotSupportedException for URI's
-                                        FileInfo file = new FileInfo(item.LaunchApp);
-                                        if (file.Exists)
-                                            file.OpenLocation();
-                                    }
-                                    catch (NotSupportedException)
-                                    {
-                                        string http = item.LaunchApp.ToLower();
-                                        if (!http.Contains("http"))
-                                            http = "http://" + http;
-                                        Process.Start(http);
-                                    }
-                            }
+                        // If set to launch the app after copying text to clipboard
+                        if (item.DoLaunchApp && !string.IsNullOrWhiteSpace(item.LaunchApp))
+                        {
+                            if (!App.Try_AppAndIcon_IsSteam(item, icon => Process.Start(item.LaunchApp)))
+                                try
+                                {
+                                    // Throws NotSupportedException for URI's
+                                    FileInfo file = new FileInfo(item.LaunchApp);
+                                    if (file.Exists)
+                                        file.OpenLocation();
+                                }
+                                catch (NotSupportedException)
+                                {
+                                    string http = item.LaunchApp.ToLower();
+                                    if (!http.Contains("http"))
+                                        http = "http://" + http;
+                                    Process.Start(http);
+                                }
                         }
                     }
                 }
