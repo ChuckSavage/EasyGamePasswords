@@ -23,7 +23,7 @@ namespace ToClipboard
         public MainWindow()
         {
             InitializeComponent();
-            Title = App.TITLE + " v1.0.12";
+            Title = App.TITLE + " v1.0.13";
             App.CURRENT.WindowPlace.Register(this); // save & restore window size and location
 
             DB = new Data.DataSQLite(true);
@@ -50,20 +50,31 @@ namespace ToClipboard
         {
             base.OnClosed(e);
 
-            /*
-             * THE REASON FOR THE PROGRAM
-             * 
-             * Create a JumpList, and add the items for the selected JumpList
-             */
+            CreateJumpList(DB);
+            //DB.SaveChanges(); // this will save changes that don't show as needing saving
+            DB.Dispose();
+        }
+
+        /// <summary>
+        /// Create a JumpList, and add the items for the selected JumpList
+        /// </summary>
+        /// <param name="db"></param>
+        public static void CreateJumpList(IData db = null)
+        {
+            if (null == db)
+            {
+                db = new Data.DataSQLite();
+                db.SelectedJumpList = db.First_JumpList();
+            }
 
             var jl = new JumpList { ShowFrequentCategory = false, ShowRecentCategory = false };
 
             string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            string category = DB.SelectedJumpList.Name + " Jump List";
+            string category = db.SelectedJumpList.Name + " Jump List";
 
             // Apply sort
-            IItem[] items = DB.GetItems(DB.SelectedJumpList.JumpListId);
-            switch (DB.SelectedJumpList.SortBy)
+            IItem[] items = db.GetItems(db.SelectedJumpList.JumpListId);
+            switch (db.SelectedJumpList.SortBy)
             {
                 case SortType.Ascending:
                     items = items.OrderBy(i => i.Title).ToArray();
@@ -141,8 +152,6 @@ namespace ToClipboard
                 jl.JumpItems.Add(task);
             }
             JumpList.SetJumpList(Application.Current, jl);
-            //DB.SaveChanges(); // this will save changes that don't show as needing saving
-            DB.Dispose();
         }
 
         protected override void OnClosing(CancelEventArgs e)
